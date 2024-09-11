@@ -5,7 +5,3 @@
 ## 目次
 
 ・[Multicopter](documents/Multicopter/readme.md)
-
-・[STM32](documents/STM32/readme.md)
-
-・[ESP32](documents/ESP32/readme.md)
