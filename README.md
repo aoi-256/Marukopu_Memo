@@ -12,11 +12,11 @@ Github Educationの申請が通り次第プライベート化とドキュメン�
 
 ##### ・[Multicopter](documents/Multicopter/readme.md) マルコプ関係の開発メモ
 
-#### ・[STM32](documents/STM32/readme.md)　STM32の開発
+##### ・[STM32](documents/STM32/readme.md)　STM32の開発
 
-#### ・[ESP32](documents/ESP32/readme.md)　ESP32の開発
+##### ・[ESP32](documents/ESP32/readme.md)　ESP32の開発
 
-#### ・[ドキュメント追加](documents/manege/add_documents)
+##### ・[ドキュメント追加](documents/manege/add_documents)
 
 ### このドキュメントの制作にあたって
 
