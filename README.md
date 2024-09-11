@@ -12,3 +12,5 @@
 
 ・[ESP32](documents/ESP32/readme.md)　ESP32の開発
 
+## このドキュメントの制作にあたって
+
