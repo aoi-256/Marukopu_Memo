@@ -6,7 +6,7 @@
 
 Github Educationの申請が通り次第プライベート化とドキュメントの追加を行います！
 
-## 目次
+### 目次
 
 ・[Multicopter](documents/Multicopter/readme.md) マルコプ関係の開発メモ
 
@@ -14,6 +14,6 @@ Github Educationの申請が通り次第プライベート化とドキュメン�
 
 ・[ESP32](documents/ESP32/readme.md)　ESP32の開発
 
-## このドキュメントの制作にあたって
+### このドキュメントの制作にあたって
 
 
