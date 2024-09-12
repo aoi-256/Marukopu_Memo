@@ -19,7 +19,7 @@ Github Educationの申請が通り次第プライベート化とドキュメン�
 
 ・[ドキュメント追加](documents/manege/add_documents)
 
-・[その他](documents/off-topic/index.md)
+・[その他](documents/off_topic/index.md)
 
 ### このドキュメントの制作にあたって
 
