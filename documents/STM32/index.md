@@ -1,3 +1,6 @@
+
+![STM32F3-series_SPL](https://github.com/user-attachments/assets/cb8b7876-59c1-448e-8ac9-a8ee5c3ec084)
+
 # STM32の開発
 
 正直難易度は高い、、、
