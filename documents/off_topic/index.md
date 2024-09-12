@@ -4,4 +4,4 @@
 
 ## python 
 
-・[並列処理での高速化]()
+・[並列処理での高速化](multiprocessing.md)
