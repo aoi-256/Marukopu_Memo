@@ -35,7 +35,7 @@ HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5, GPIO_PIN_SET);
 ここからは、関数の引数（括弧内にある変数のことで、関数に渡す値になる）について説明する
 
 ### 第1引数 GPIOA
-```cpp
+```
 ピンの種類（PA、PB、PC）などを示している
 
 PAのピンならGPIOA、PBのピンならGPIOBのように設定する
@@ -43,13 +43,13 @@ PAのピンならGPIOA、PBのピンならGPIOBのように設定する
 今回はPA5のピンであるため、GPIOAとしている
 ```
 ### 第2引数 GPIO_PIN_5
-```cpp
+```
 ピンの番号を示している
 
 今回はPA5のピンであるため、GPIO_PIN_5としてある
 ```
 ### 第3引数 GPIO_PIN_SET
-```cpp
+```
 ピンから出力される電圧を示している
 
 GPIO_PIN_SET　   3.3V
