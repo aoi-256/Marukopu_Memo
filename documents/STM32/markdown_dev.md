@@ -7,3 +7,8 @@
 ```rb
 puts 'Hello, World'
 ```
+
+:::note info
+インフォメーション
+infoは省略可能です。
+:::
