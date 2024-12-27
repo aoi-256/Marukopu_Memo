@@ -1,16 +1,9 @@
 ## test
 
-:::note info
-インフォメーション
-infoは省略可能です。
-:::
+<details open><summary>サンプルコード（open属性あり）</summary>
 
-:::note warn
-警告
-○○に注意してください。
-:::
+(上に空行が必要)
 
-:::note alert
-より強い警告
-○○しないでください。
-:::
+```rb
+puts 'Hello, World'
+```
