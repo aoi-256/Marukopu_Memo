@@ -1,24 +1,14 @@
-## test
+> [!NOTE]
+> 色付きのメモかけるのすごいね！
 
-<details open><summary>サンプルコード（open属性あり）</summary>
+> [!TIP]
+> 上手くいく方法をメモしておこうね！
 
-(上に空行が必要)
+> [!IMPORTANT]
+> Crucial information necessary for users to succeed.
 
-```rb
-puts 'Hello, World'
-```
+> [!WARNING]
+> Critical content demanding immediate user attention due to potential risks.
 
-> 引用  
-> 引用
->> 多重引用
-
- - リスト1
-    - リスト1_1
-        - リスト1_1_1
-        - リスト1_1_2
-    - リスト1_2
-- リスト2
-- リスト3
-
-- [ ] not checked
-- [x] checked
+> [!CAUTION]
+> Negative potential consequences of an action.
