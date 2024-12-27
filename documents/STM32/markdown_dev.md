@@ -5,10 +5,10 @@
 > 上手くいく方法をメモしておこうね！
 
 > [!IMPORTANT]
-> Crucial information necessary for users to succeed.
+> 重要なことをメモしておこう
 
 > [!WARNING]
-> Critical content demanding immediate user attention due to potential risks.
+> これやったら基盤燃えます
 
 > [!CAUTION]
-> Negative potential consequences of an action.
+> 変数型には気を付けよう
