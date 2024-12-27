@@ -19,3 +19,6 @@ puts 'Hello, World'
     - リスト1_2
 - リスト2
 - リスト3
+
+- [ ] not checked
+- [x] checked
