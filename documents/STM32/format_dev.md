@@ -33,12 +33,50 @@ I2C通信をする上で使う関数は、
 
 **書き込み（送信）**
 ```cpp
-HAL_I2C_Mem_Write(&hi2c2, I2C_ADDR, TEST_REGISTER, 1, &send_data, 1, 10);
+HAL_I2C_Mem_Write(&hi2c2, I2C_ADDR, REGISTER, 1, &send_data, 1, 10);
 ```
 
 **読み取り（受信）**
 ```cpp
-HAL_I2C_Mem_Read(&hi2c2, I2C_ADDR, TEST_REGISTER, 1,&receive_data, 1, 10);
+HAL_I2C_Mem_Read(&hi2c2, I2C_ADDR, REGISTER, 1, &receive_data, 1, 10);
 ```
 
+> [!NOTE]
+>
+> この関数の引数について(1や10といった数字はそのままでok!)
+>
+> - &hi2c2・・・使うi2cのピン
+> - I2C_ADDR・・・I2Cアドレス
+> - REGISTER・・・レジスタアドレス
+> - ○○○_data・・・送信/受信するデータ（ポインタ）
+>
+
+<details>
+
+ <summary> 細かいお話 </summary>
+
+ <br>
+
+- **一番最後の'10'という引数について**
+
+これは、最大時間を設定している
+
+通常は一瞬で通信が成功するが、上手くいかなかったときこの数字の秒数（単位はms)で諦めるように設定できる
+ 
+<br>
+
+- **REGISTERと&send_dataの後の'1'という引数について**
+
+これは、隣り合う複数のレジスタに一度に書き込むときに使う
+
+例えば、0x10から0x12までの3つのレジスタに書き込みたいときは、send_data[3]のように3つの要素を持つ配列とセットで
+このように書くことができる
+
+```cpp
+HAL_I2C_Mem_Write(&hi2c2, I2C_ADDR, 0x10, 3, send_data, 3, 10);
+```
+
+センサーの値などはxyzのデータが近いレジスタにあることがほとんどなので、知っておくと便利かも
+
+</details>
 
