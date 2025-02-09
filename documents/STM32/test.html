@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STM32でI2C通信のやり方</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        .note {
+            background-color: #e6ffed;
+            border-left: 5px solid #2cbe4e;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>今回は初心者さん向けにSTM32でI2C通信のやり方を説明します！</h1>
+    <p>なるべく簡単な説明でセンサーとの通信ができるようにしていきます！</p>
+    <h2>I2C通信とは</h2>
+    <p>センサーなどと通信するときによく使う！</p>
+    <p>配線も少なく、（比較的）簡単に実装できるのでおすすめ</p>
+    <p>いくつか特徴があるので、3つだけ紹介してみる</p>
+    <div class="note">
+        <h3>I2C通信の特徴</h3>
+        <ul>
+            <li>通信速度がそこそこ早い</li>
+            <li>データとクロック用に2本の線を使う</li>
+            <li>複数のセンサーなどを同じ配線で扱える</li>
+        </ul>
+    </div>
+    <h2>I2C通信をするために</h2>
+    <p>I2C通信の細かい説明をすると、結構難しくなってしまうので</p>
+    <p>ここでは、プログラムを書く上な要素を4つ紹介しておきます</p>
+    <div class="note">
+        <h3>I2C通信で使う4要素</h3>
+        <ul>
+            <li>データを送る相手（I2Cアドレス)</li>
+            <li>データの送信場所 (レジスタアドレス）</li>
+            <li>送信/受信するデータ　(データ)</li>
+            <li>データの長さ（データ長）</li>
+        </ul>
+    </div>
+    <h2>STM32でI2C通信をする方法</h2>
+    <h3>ピン設定について</h3>
+    <p>SCL（クロック）とSDA（データ）用の2つのピンを設定しよう</p>
+    <p>設定項目が色々出てくるけど、基本はそのままで大丈夫！</p>
+    <h3>プログラムについて</h3>
+    <p>センサーとの通信で使う関数はこの2つになる</p>
+    <pre><code class="language-cpp">HAL_I2C_Mem_Read(&hi2c2, I2C_ADDR, REGISTER, 1, &receive_data, 1, 10);</code></pre>
+    <div class="note">
+        <h3>この関数の引数について</h3>
+        <ul>
+            <li>&hi2c2   ・・・使うi2cのピン</li>
+            <li>I2C_ADDR・・・I2Cアドレス</li>
+            <li>REGISTER・・・レジスタアドレス</li>
+            <li>○○○_data・・・送信/受信するデータ（ポインタ）</li>
+        </ul>
+    </div>
+    <details>
+        <summary>細かいお話</summary>
+        <br>
+        <ul>
+            <li><strong>一番最後の'10'という引数について</strong>
+                <p>これは、最大時間を設定している。通常は一瞬で通信が成功するが、上手くいかなかったときこの数字の秒数（単位はms)で諦めるように設定できる。</p>
+            </li>
+            <li><strong>REGISTERと&send_dataの後の'1'という引数について</strong>
+                <p>これは、隣り合う複数のレジスタに一度に書き込むときに使う。例えば、0x10から0x12までの3つのレジスタに書き込みたいときは、send_data[3]のように3つの要素を持つ配列とセットでこのように書くことができる。</p>
+                <pre><code class="language-cpp">HAL_I2C_Mem_Write(&hi2c2, I2C_ADDR, 0x10, 3, send_data, 3, 10);</code></pre>
+                <p>センサーの値などはxyzのデータが近いレジスタにあることがほとんどなので、知っておくと便利かも。</p>
+            </li>
+        </ul>
+    </details>
+    <h2>サンプルコード</h2>
+    <p>それっぽいセンサーの値を用意をしてみました。実際の値は、センサーのデータシートなどに記載があるのでそちらを見てね。</p>
+    <table>
+        <thead>
+            <tr>
+                <th>名前</th>
+                <th>値</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>使うピン</td>
+                <td>i2c2</td>
+            </tr>
+            <tr>
+                <td>I2Cアドレス</td>
+                <td>0x68</td>
+            </tr>
+            <tr>
+                <td>REGISTER</td>
+                <td>0x01</td>
+            </tr>
+            <tr>
+                <td>送信データ</td>
+                <td>0x15</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>コードの中身としては、あらかじめ決めたレジスタに値を書き込んでその値が保存されているかを実際に読み取ってチェックするものです。</p>
+    <pre><code class="language-cpp">
+uint8_t I2C_ADDR = 0x68 << 1;
+uint8_t TEST_REGISTER = 0x01;
+uint8_t send_data = 0x15;
+uint8_t receive_data = 0;
+
+//値の書き込み
+HAL_I2C_Mem_Write(&hi2c2, I2C_ADDR, TEST_REGISTER, 1, &send_data, 1, 10);
+
+//値の読み取り
+HAL_I2C_Mem_Read(&hi2c2, I2C_ADDR, TEST_REGISTER, 1,&receive_data, 1, 10);
+
+//データの判定
+if(send_data == receive_data){
+  //成功した時の処理
+}  
+    </code></pre>
+    <h2>終わりに</h2>
+    <p>適当な説明でしたが、少しでも理解の助けになれたらうれしいです！</p>
+    <p>データシートの読み方も解説しようと思います！</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-cpp.min.js"></script>
+</body>
+</html>
