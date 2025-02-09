@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STM32でI2C通信のやり方</title>
+    <title>STM32_LEDチカ</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <style>
         body {
@@ -76,111 +76,102 @@
 </head>
 <body>
     <main>
-        <h1>STM32でI2C通信をやってみよう</h1>
-        <p>なるべく簡単な説明でセンサーとの通信ができるようにしていきます！</p>
-        <h2>I2C通信とは</h2>
-        <p>センサーなどと通信するときによく使う！</p>
-        <p>配線も少なく、（比較的）簡単に実装できるのでおすすめ</p>
-        <p>いくつか特徴があるので、3つだけ紹介してみる</p>
+        
+        <h3>STM32資料 基礎編 1</h3>
+        <h1>LEDをつけてみよう</h1>
+        <p>LEDをつけて、STMの開発の流れを覚えていこう!</p>
+
+        <h2>今回やること</h2>
+        <p>今回は3つのステップに沿ってLEDをつけてみる</p>
+        <p>通信などをするときも同じステップを踏むので慣れておこう！</p>
         <div class="note">
-            <h3>I2C通信の特徴</h3>
+            <h3>作業の流れ</h3>
             <ul>
-                <li>通信速度がそこそこ早い</li>
-                <li>データとクロック用に2本の線を使う</li>
-                <li>複数のセンサーなどを同じ配線で扱える</li>
+                <li>LEDにピンを割り当てる</li>
+                <li>wrapper.cppにコードを書き込む</li>
+                <li>STM32にプログラムを書き込み実行する</li>
             </ul>
         </div>
-        <h2>I2C通信をするために</h2>
-        <p>I2C通信の細かい説明をすると、結構難しくなってしまうので</p>
-        <p>ここでは、プログラムを書く上な要素を4つ紹介しておきます</p>
+        <h2>ピンの割り当て</h2>
+        <p>STM32では、1つのピンに通信やLEDなどの機能を割り当てることができる</p>
+        <p>そのため、どの用途でどのピンを使うかを設定しなくてはならない</p>
+        <p><strong>(プロジェクト名).ioc</strong>をクリックすると画像のような画面が出てくるのでここで設定しよう</p>
+
         <div class="note">
-            <h3>I2C通信で使う4要素</h3>
-            <ul>
-                <li>データを送る相手（I2Cアドレス)</li>
-                <li>データの送信場所 (レジスタアドレス）</li>
-                <li>送信/受信するデータ　(データ)</li>
-                <li>データの長さ（データ長）</li>
-            </ul>
+            <p>PA5にGPIO_Output（電圧を変えることができる機能）が割り当てられていることを確認しておこう</p>
+            </p>
         </div>
-        <h2>STM32でI2C通信をする方法</h2>
-        <h3>ピン設定について</h3>
-        <p>SCL（クロック）とSDA（データ）用の2つのピンを設定しよう</p>
-        <p>設定項目が色々出てくるけど、基本はそのままで大丈夫！</p>
-        <h3>プログラムについて</h3>
-        <p>センサーとの通信で使う関数はこの2つになる</p>
-        <pre><code class="language-cpp">HAL_I2C_Mem_Read(&hi2c2, I2C_ADDR, REGISTER, 1, &receive_data, 1, 10);</code></pre>
+
+        <p>[画像を添付する]</p>
+        
+        <h2>プログラム</h2>
+
+        <h3>LEDをつけるための関数</h3>
+        <p>今回はLEDに与える電圧を設定することで、LEDをつけている</p>
+        <p>そこで、電圧を変更する関数について説明する</p>
+
+        <h3>関数</h3>
+        <pre><code class="language-cpp">HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5, GPIO_PIN_SET);</code></pre>
         <div class="note">
-            <h3>この関数の引数について</h3>
+            <h3>この関数の引数</h3>
             <ul>
-                <li>&hi2c2   ・・・使うi2cのピン</li>
-                <li>I2C_ADDR・・・I2Cアドレス</li>
-                <li>REGISTER・・・レジスタアドレス</li>
-                <li>○○○_data・・・送信/受信するデータ（ポインタ）</li>
+                <li>GPIOA <br> 使用するピンの種類 PA5なのでGPIOAにする</li>
+                <li>GPIO_PIN_5 <br> 使用するピンの番号 PA5なのでGPIO_PIN_5にする</li>
+                <li>GPIO_PIN_SET <br> 電圧を決める SETが3.3v RESETが0.0vになっている</li>
             </ul>
-        </div>
+        </div>   
         <details>
             <summary>細かいお話</summary>
             <br>
             <ul>
-                <li><strong>一番最後の'10'という引数について</strong>
-                    <p>これは、最大時間を設定している。通常は一瞬で通信が成功するが、上手くいかなかったときこの数字の秒数（単位はms)で諦めるように設定できる。</p>
-                </li>
-                <li><strong>REGISTERと&send_dataの後の'1'という引数について</strong>
-                    <p>これは、隣り合う複数のレジスタに一度に書き込むときに使う。例えば、0x10から0x12までの3つのレジスタに書き込みたいときは、send_data[3]のように3つの要素を持つ配列とセットでこのように書くことができる。</p>
-                    <pre><code class="language-cpp">HAL_I2C_Mem_Write(&hi2c2, I2C_ADDR, 0x10, 3, send_data, 3, 10);</code></pre>
-                    <p>センサーの値などはxyzのデータが近いレジスタにあることがほとんどなので、知っておくと便利かも。</p>
+                <li><strong>ピンの状態を反転する関数</strong>
+                    <p>LEDが付いている時消す、消えている時につけるという動作を実行したいときは、この関数を使ってみよう</p>
+                    <pre><code class="language-cpp">HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_1);</code></pre>
+                    <p>反転する関数なので、電圧を決める引数がないこと以外は、上の関数と同じ</p>
                 </li>
             </ul>
         </details>
+
+
+        <h3>待機する関数</h3>
+        <p>タイミングを調整するために、一定時間待機する関数を使う</p>
+
+        <h3>関数</h3>
+        <pre><code class="language-cpp">HAL_Delay(TIME);</code></pre>
+        <div class="note">
+            <h3>この関数の引数</h3>
+            <ul>
+                <li>TIME <br> 待機したい時間（ミリ秒）1~65536までの値を入力できる</li>
+            </ul>
+        </div>   
+
         <h2>サンプルコード</h2>
-        <p>それっぽいセンサーの値を用意をしてみました。実際の値は、センサーのデータシートなどに記載があるのでそちらを見てね。</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>名前</th>
-                    <th>値</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>使うピン</td>
-                    <td>i2c2</td>
-                </tr>
-                <tr>
-                    <td>I2Cアドレス</td>
-                    <td>0x68</td>
-                </tr>
-                <tr>
-                    <td>REGISTER</td>
-                    <td>0x01</td>
-                </tr>
-                <tr>
-                    <td>送信データ</td>
-                    <td>0x15</td>
-                </tr>
-            </tbody>
-        </table>
-        <p>コードの中身としては、あらかじめ決めたレジスタに値を書き込んでその値が保存されているかを実際に読み取ってチェックするものです。</p>
-        <pre><code class="language-cpp">
-uint8_t I2C_ADDR = 0x68 << 1;
-uint8_t TEST_REGISTER = 0x01;
-uint8_t send_data = 0x15;
-uint8_t receive_data = 0;
+        <p>実際にLEDを点灯させるコードを載せた</p>
+        <p>実際に実行してみたり、Delayの時間を変えたりしてみよう</p>
+        <pre><code class="language-cpp">//起動時に一度だけ実行される
+void init(){
 
-//値の書き込み
-HAL_I2C_Mem_Write(&hi2c2, I2C_ADDR, TEST_REGISTER, 1, &send_data, 1, 10);
-
-//値の読み取り
-HAL_I2C_Mem_Read(&hi2c2, I2C_ADDR, TEST_REGISTER, 1,&receive_data, 1, 10);
-
-//データの判定
-if(send_data == receive_data){
-  //成功した時の処理
-}  
-        </code></pre>
+    //LEDをつける
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5, GPIO_PIN_SET);
+                    
+    //1000ms(1s)待機
+    HAL_Delay(1000);
+}
+//繰り返し実行される            
+void loop(){
+                
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5, GPIO_PIN_RESET);
+                    
+    HAL_Delay(500);
+                    
+    HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5, GPIO_PIN_SET);
+                    
+    HAL_Delay(500);      
+}</code></pre>
         <h2>終わりに</h2>
-        <p>適当な説明でしたが、少しでも理解の助けになれたらうれしいです！</p>
-        <p>データシートの読み方も解説しようと思います！</p>
+        <p>今回はLEDをつけて、開発の流れを体験してもらいました!</p>
+        <p>次回は、1本の通信線を使ったシリアル通信について説明します!</p>
+        <p>(次のページのリンク)</p>
     </main>
     <footer>
         <p>&copy; 2025 東京農工大学 航空研究会</p>
